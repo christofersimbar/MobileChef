@@ -66,7 +66,6 @@ public class MainActivityBasicTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         //click step tab, or do swipe left
-        //onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.detail_view_pager))
                 .perform(withCustomConstraints(swipeLeft(), isDisplayingAtLeast(65)));
 
