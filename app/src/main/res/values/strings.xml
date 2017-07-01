@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Mobile Chef</string>
-    <string name="title_activity_detail">DetailActivity</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_instruction">instruction</string>
+    <string name="label_servings">servings</string>
+    <string name="label_no_recipe">No recipe found. Check your Internet connection</string>
+    <string name="label_instruction_video">Instruction video</string>
+    <string name="notification_favorite_added">Recipe added to favorite!</string>
+    <string name="notification_instruction_starting">Swipe left or right to navigate between video instruction</string>
 </resources>

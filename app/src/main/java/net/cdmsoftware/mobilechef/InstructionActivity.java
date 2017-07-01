@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import net.cdmsoftware.mobilechef.ui.FragmentVideo;
 
@@ -23,7 +24,7 @@ import static net.cdmsoftware.mobilechef.data.Contract.StepEntry;
 
 public class InstructionActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    @BindView(R.id.view_pager)
+    @BindView(R.id.instruction_view_pager)
     ViewPager viewPager;
 
     private Cursor cursor;
@@ -58,14 +59,26 @@ public class InstructionActivity extends AppCompatActivity
 
         // Set the adapter onto the view pager
         viewPager.setAdapter(instructionPagerAdapter);
-        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
             @Override
             public void onPageSelected(int position) {
                 if (cursor != null) {
                     cursor.moveToPosition(position);
                 }
             }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
         });
+
+        Toast.makeText(this, R.string.notification_instruction_starting, Toast.LENGTH_LONG).show();
     }
 
     @Override

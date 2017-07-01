@@ -45,16 +45,17 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         cursor.moveToPosition(position);
         if (null != cursor) {
             holder.recipeName.setText(cursor.getString(RecipeEntry.POSITION_NAME));
+            holder.recipeImage.setContentDescription(cursor.getString(RecipeEntry.POSITION_IMAGE));
             if (!cursor.getString(RecipeEntry.POSITION_IMAGE).equals("")) {
                 Picasso.with(context)
                         .load(cursor.getString(RecipeEntry.POSITION_IMAGE))
-                        .placeholder(R.drawable.recipe_no_image)
-                        .error(R.drawable.recipe_no_image)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(holder.recipeImage);
             } else {
                 Picasso.with(context)
-                        .load(R.drawable.recipe_no_image)
-                        .placeholder(R.drawable.recipe_no_image)
+                        .load(R.drawable.placeholder)
+                        .placeholder(R.drawable.placeholder)
                         .into(holder.recipeImage);
             }
         }

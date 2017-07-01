@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import net.cdmsoftware.mobilechef.R;
 
+import java.text.DecimalFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -41,7 +43,8 @@ class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Ingredien
     public void onBindViewHolder(IngredientAdapter.IngredientViewHolder holder, int position) {
         cursor.moveToPosition(position);
         if (null != cursor) {
-            holder.ingredientQty.setText(cursor.getString(IngredientEntry.POSITION_QUANTITY));
+            DecimalFormat decimalFormat = new DecimalFormat("#,###.#");
+            holder.ingredientQty.setText(decimalFormat.format(cursor.getDouble(IngredientEntry.POSITION_QUANTITY)));
             holder.ingredientMeasure.setText(cursor.getString(IngredientEntry.POSITION_MEASURE));
             holder.ingredientName.setText(cursor.getString(IngredientEntry.POSITION_INGREDIENT));
         }

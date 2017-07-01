@@ -25,17 +25,15 @@ import butterknife.ButterKnife;
 
 import static net.cdmsoftware.mobilechef.data.Contract.StepEntry;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FragmentStep extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, StepAdapter.ListItemClickListener {
-    public static final String ARG_RECIPE_ID = "recipeId";
+    private static final String ARG_RECIPE_ID = "recipeId";
+    private static final String TAG_FRAGMENT_VIDEO = "tag_fragment_video";
     private long recipeId;
     private StepAdapter stepAdapter;
     private int position = RecyclerView.NO_POSITION;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.step_recycler_view)
     RecyclerView recyclerView;
 
     public FragmentStep() {
@@ -112,8 +110,16 @@ public class FragmentStep extends Fragment
 
     @Override
     public void onListItemClick(int clickedItemIndex, StepAdapter.StepViewHolder stepViewHolder) {
-        Intent intent = new Intent(getActivity(), InstructionActivity.class);
-        intent.setData(StepEntry.buildItemUri(recipeId, clickedItemIndex));
-        startActivity(intent);
+        if (getActivity().findViewById(R.id.video_container) != null) {
+            Fragment fragmentVideo = FragmentVideo.newInstance(recipeId, clickedItemIndex);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.video_container, fragmentVideo, TAG_FRAGMENT_VIDEO)
+                    .commit();
+        } else {
+            Intent intent = new Intent(getActivity(), InstructionActivity.class);
+            intent.setData(StepEntry.buildItemUri(recipeId, clickedItemIndex));
+            startActivity(intent);
+        }
     }
 }

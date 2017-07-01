@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import net.cdmsoftware.mobilechef.DetailActivity;
 import net.cdmsoftware.mobilechef.R;
+import net.cdmsoftware.mobilechef.Utilities;
 import net.cdmsoftware.mobilechef.data.Contract;
 import net.cdmsoftware.mobilechef.sync.RecipeIntentService;
 
@@ -36,7 +37,7 @@ public class FragmentRecipe extends Fragment
     private RecipeAdapter recipeAdapter;
     private int position = RecyclerView.NO_POSITION;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.recipe_recycler_view)
     RecyclerView recyclerView;
 
     @BindView(R.id.swipe_refresh_layout)
@@ -71,7 +72,7 @@ public class FragmentRecipe extends Fragment
         recipeAdapter = new RecipeAdapter(null, getActivity(), this);
 
         recyclerView.setAdapter(recipeAdapter);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(getResources().getInteger(R.integer.main_screen_column_count), StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -125,6 +126,17 @@ public class FragmentRecipe extends Fragment
         recipeAdapter.swapCursor(data);
         if (position == RecyclerView.NO_POSITION) position = 0;
         recyclerView.smoothScrollToPosition(position);
+
+        if ((data != null) && data.moveToFirst()) {
+            if (Utilities.isFavoriteEmpty(getContext())) {
+                Utilities.setAsFavoriteRecipe(
+                        getContext(),
+                        data.getLong(RecipeEntry.POSITION_ID),
+                        data.getString(RecipeEntry.POSITION_NAME),
+                        data.getString(RecipeEntry.POSITION_IMAGE)
+                );
+            }
+        }
     }
 
     @Override

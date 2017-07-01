@@ -15,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import net.cdmsoftware.mobilechef.R;
 
@@ -29,20 +31,30 @@ import static net.cdmsoftware.mobilechef.data.Contract.IngredientEntry;
 public class FragmentIngredient extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, IngredientAdapter.ListItemClickListener {
     public static final String ARG_RECIPE_ID = "recipeId";
+    public static final String ARG_NUM_OF_SERVINGS = "numOfServings";
     private long recipeId;
+    private int numOfServings;
+
     private IngredientAdapter ingredientAdapter;
     private int position = RecyclerView.NO_POSITION;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.ingredient_recycler_view)
     RecyclerView recyclerView;
+
+    @BindView(R.id.servings_control)
+    SeekBar servingsControl;
+
+    @BindView(R.id.servings_quantity)
+    TextView servingsQuantity;
 
     public FragmentIngredient() {
         // Required empty public constructor
     }
 
-    public static FragmentIngredient newInstance(long recipeId) {
+    public static FragmentIngredient newInstance(long recipeId, int numOfServings) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_RECIPE_ID, recipeId);
+        arguments.putInt(ARG_NUM_OF_SERVINGS, numOfServings);
         FragmentIngredient fragment = new FragmentIngredient();
         fragment.setArguments(arguments);
         return fragment;
@@ -55,6 +67,7 @@ public class FragmentIngredient extends Fragment
         //retrieve recipe id from detail activity
         if (getArguments().containsKey(ARG_RECIPE_ID)) {
             recipeId = getArguments().getLong(ARG_RECIPE_ID);
+            numOfServings = getArguments().getInt(ARG_NUM_OF_SERVINGS);
         }
     }
 
@@ -74,6 +87,31 @@ public class FragmentIngredient extends Fragment
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL));
+
+        servingsQuantity.setText(String.valueOf(numOfServings));
+        servingsControl.setProgress(numOfServings);
+        servingsControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int position;
+            int oldServings;
+            int newServings;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                position = progressValue + 1;
+                servingsQuantity.setText(String.valueOf(position));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                oldServings = Integer.valueOf(servingsQuantity.getText().toString());
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                newServings = position;
+                updateServings(oldServings, newServings);
+            }
+        });
 
         return rootView;
     }
@@ -110,5 +148,13 @@ public class FragmentIngredient extends Fragment
     @Override
     public void onListItemClick(int clickedItemIndex, IngredientAdapter.IngredientViewHolder ingredientViewHolder) {
         //
+    }
+
+    private void updateServings(int oldServings, int newServings) {
+        getActivity().getContentResolver().update(
+                IngredientEntry.buildServingsUri(recipeId, oldServings, newServings),
+                null,
+                null,
+                null);
     }
 }

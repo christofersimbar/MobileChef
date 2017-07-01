@@ -3,8 +3,11 @@ package net.cdmsoftware.mobilechef.sync;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
+
+import net.cdmsoftware.mobilechef.Utilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,14 +28,14 @@ import static net.cdmsoftware.mobilechef.data.Contract.RecipeEntry;
 import static net.cdmsoftware.mobilechef.data.Contract.StepEntry;
 
 class RecipeSyncTask {
-
     static void getRecipes(Context context) {
         HttpURLConnection urlConnection;
         BufferedReader reader;
 
         URL url;
         try {
-            String RECIPE_API_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+            //String RECIPE_API_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+            String RECIPE_API_URL = "http://cdn.cdmsoftware.net/baking.json";
             url = new URL(RECIPE_API_URL);
 
             try {
@@ -134,6 +137,10 @@ class RecipeSyncTask {
 
             try {
                 context.getContentResolver().applyBatch(AUTHORITY, contentProviderOperations);
+
+                //new data available! tell everyone ^_^
+                Intent dataUpdatedIntent = new Intent(Utilities.ACTION_DATA_UPDATED);
+                context.sendBroadcast(dataUpdatedIntent);
             } catch (RemoteException | OperationApplicationException e) {
                 e.printStackTrace();
             }

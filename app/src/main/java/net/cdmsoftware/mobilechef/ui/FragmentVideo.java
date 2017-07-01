@@ -2,7 +2,6 @@ package net.cdmsoftware.mobilechef.ui;
 
 
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,10 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
@@ -45,6 +46,7 @@ import net.cdmsoftware.mobilechef.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 import static net.cdmsoftware.mobilechef.data.Contract.StepEntry;
 
 public class FragmentVideo extends Fragment
@@ -55,6 +57,8 @@ public class FragmentVideo extends Fragment
     private long stepId;
     private Cursor cursor;
     private SimpleExoPlayer exoPlayer;
+    private MediaSessionCompat mediaSession;
+    private PlaybackStateCompat.Builder stateBuilder;
 
     @BindView(R.id.short_description)
     TextView short_description;
@@ -62,9 +66,11 @@ public class FragmentVideo extends Fragment
     @BindView(R.id.description)
     TextView description;
 
-    @BindView(R.id.player_view)
+    @BindView(R.id.playerView)
     SimpleExoPlayerView exoPlayerView;
 
+    @BindView(R.id.video_placeholder)
+    ImageView videoPlaceholder;
 
     public FragmentVideo() {
         // Required empty public constructor
@@ -81,7 +87,6 @@ public class FragmentVideo extends Fragment
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        getLoaderManager().initLoader(5, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -103,18 +108,49 @@ public class FragmentVideo extends Fragment
         //initialize ButterKnife library
         ButterKnife.bind(this, rootView);
 
-        exoPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(), R.drawable.recipe_no_image));
+        // Initialize the Media Session.
+        initializeMediaSession();
 
         return rootView;
+    }
+
+    private void initializeMediaSession() {
+        // Create a MediaSessionCompat.
+        mediaSession = new MediaSessionCompat(getActivity(), TAG);
+
+        // Enable callbacks from MediaButtons and TransportControls.
+        mediaSession.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        // Do not let MediaButtons restart the player when the app is not visible.
+        mediaSession.setMediaButtonReceiver(null);
+
+        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
+        stateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+
+        mediaSession.setPlaybackState(stateBuilder.build());
+
+        // MySessionCallback has methods that handle callbacks from a media controller.
+        mediaSession.setCallback(new mediaSessionCallback());
+
+        // Start the Media Session since the activity is active.
+        mediaSession.setActive(true);
     }
 
     private void initializePlayer(Uri mediaUri) {
         if (exoPlayer == null) {
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
+            //LoadControl loadControl = new DefaultLoadControl();
             LoadControl loadControl = new DefaultLoadControl(
                     new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE),
-                    60 * 5 * 1000, // this is it!
+                    60 * 5 * 1000,
                     60 * 10 * 1000,
                     DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS,
                     DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
@@ -137,6 +173,7 @@ public class FragmentVideo extends Fragment
 
             //exoPlayer.prepare(mediaSource);
             exoPlayer.prepare(new LoopingMediaSource(mediaSource));
+            exoPlayer.setPlayWhenReady(true);
         }
     }
 
@@ -164,6 +201,12 @@ public class FragmentVideo extends Fragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getLoaderManager().initLoader(5, null, this);
+    }
+
+    @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
             cursor = data;
@@ -172,22 +215,18 @@ public class FragmentVideo extends Fragment
             String videoURL = cursor.getString(StepEntry.POSITION_VIDEO_URL);
             if (!videoURL.equals("")) {
                 initializePlayer(Uri.parse(videoURL));
+                videoPlaceholder.setVisibility(View.INVISIBLE);
+            } else {
+                videoPlaceholder.setVisibility(View.VISIBLE);
             }
         }
     }
 
     @Override
-    public void onStart() {
-        if (exoPlayer != null) {
-            exoPlayer.setPlayWhenReady(true);
-        }
-        super.onStart();
-    }
-
-    @Override
     public void onPause() {
-        releasePlayer();
         super.onPause();
+        mediaSession.release();
+        releasePlayer();
     }
 
     @Override
@@ -213,10 +252,13 @@ public class FragmentVideo extends Fragment
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady) {
-            Log.d("MobileChef", "onPlayerStateChanged: PLAYING");
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
+                    exoPlayer.getCurrentPosition(), 1f);
         } else if ((playbackState == ExoPlayer.STATE_READY)) {
-            Log.d("MobileChef", "onPlayerStateChanged: PAUSED");
+            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    exoPlayer.getCurrentPosition(), 1f);
         }
+        mediaSession.setPlaybackState(stateBuilder.build());
     }
 
     @Override
@@ -227,5 +269,20 @@ public class FragmentVideo extends Fragment
     @Override
     public void onPositionDiscontinuity() {
 
+    }
+
+    /**
+     * Media Session Callbacks, where all external clients control the player.
+     */
+    private class mediaSessionCallback extends MediaSessionCompat.Callback {
+        @Override
+        public void onPlay() {
+            exoPlayer.setPlayWhenReady(true);
+        }
+
+        @Override
+        public void onPause() {
+            exoPlayer.setPlayWhenReady(false);
+        }
     }
 }

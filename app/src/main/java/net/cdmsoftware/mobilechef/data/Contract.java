@@ -10,6 +10,8 @@ public class Contract {
     static final String PATH_RECIPE = "recipe";
     static final String PATH_INGREDIENT = "ingredient";
     static final String PATH_STEP = "step";
+    static final String PATH_SERVINGS = "servings";
+
 
     private static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
@@ -96,10 +98,36 @@ public class Contract {
         }
 
         /**
-         * Read recipe ID item detail URI.
+         * Matches: /recipe/[_id]/ingredient/servings/#
+         */
+        public static Uri buildServingsUri(long recipeId, int oldServings, int newServings) {
+            return BASE_URI
+                    .buildUpon()
+                    .appendPath(PATH_RECIPE)
+                    .appendPath(Long.toString(recipeId))
+                    .appendPath(PATH_INGREDIENT)
+                    .appendPath(PATH_SERVINGS)
+                    .appendPath(Integer.toString(oldServings))
+                    .appendPath(Integer.toString(newServings))
+                    .build();
+        }
+
+        /**
+         * Read recipe ID from URI.
          */
         static long getRecipeId(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+        /**
+         * Read servings from URI.
+         */
+        static long getOldServings(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(4));
+        }
+
+        static long getNewServings(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(5));
         }
     }
 

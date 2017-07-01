@@ -50,8 +50,7 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        cursor.moveToPosition(position);
-        return cursor.getLong(StepEntry.POSITION_ID);
+        return 1;
     }
 
     @Override

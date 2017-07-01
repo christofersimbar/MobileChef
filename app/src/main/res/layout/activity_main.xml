@@ -20,17 +20,21 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:layout_gravity="bottom"
+                android:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-                <TextView
-                    android:layout_width="match_parent"
+
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:text="MobileChef"/>
+                    android:layout_gravity="start"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/logo" />
+
             </android.support.v7.widget.Toolbar>
 
 
@@ -42,5 +46,7 @@
         android:name="net.cdmsoftware.mobilechef.ui.FragmentRecipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/horizontal_margin"
+        android:layout_marginStart="@dimen/horizontal_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>
