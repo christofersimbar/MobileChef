@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,9 @@ import static net.cdmsoftware.mobilechef.data.Contract.RecipeEntry;
 public class DetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG_FRAGMENT_VIDEO = "tag_fragment_video";
+
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
@@ -107,10 +111,14 @@ public class DetailActivity extends AppCompatActivity
             cursor = data;
             numOfServings = cursor.getInt(RecipeEntry.POSITION_SERVINGS);
             recipeImage.setContentDescription(cursor.getString(RecipeEntry.POSITION_NAME));
+            if (null != collapsingToolbarLayout) {
+                collapsingToolbarLayout.setTitle(cursor.getString(RecipeEntry.POSITION_NAME));
+            }
 
             if (null != getSupportActionBar()) {
                 getSupportActionBar().setTitle(cursor.getString(RecipeEntry.POSITION_NAME));
             }
+
             if (!cursor.getString(RecipeEntry.POSITION_IMAGE).equals("")) {
                 Picasso.with(this)
                         .load(cursor.getString(RecipeEntry.POSITION_IMAGE))

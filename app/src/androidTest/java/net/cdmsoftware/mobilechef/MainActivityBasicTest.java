@@ -67,7 +67,7 @@ public class MainActivityBasicTest {
 
         //click step tab, or do swipe left
         onView(withId(R.id.detail_view_pager))
-                .perform(withCustomConstraints(swipeLeft(), isDisplayingAtLeast(65)));
+                .perform(withCustomConstraints(swipeLeft(), isDisplayingAtLeast(50)));
 
         //click step item on index 0
         onView(withId(R.id.step_recycler_view))
