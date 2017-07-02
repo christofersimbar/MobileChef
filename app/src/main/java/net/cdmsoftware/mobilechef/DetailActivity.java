@@ -39,9 +39,6 @@ public class DetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG_FRAGMENT_VIDEO = "tag_fragment_video";
 
-    @BindView(R.id.collapsing_toolbar_layout)
-    CollapsingToolbarLayout collapsingToolbarLayout;
-
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
 
@@ -111,7 +108,9 @@ public class DetailActivity extends AppCompatActivity
             cursor = data;
             numOfServings = cursor.getInt(RecipeEntry.POSITION_SERVINGS);
             recipeImage.setContentDescription(cursor.getString(RecipeEntry.POSITION_NAME));
-            if (null != collapsingToolbarLayout) {
+            if (findViewById(R.id.collapsing_toolbar_layout) != null) {
+                CollapsingToolbarLayout collapsingToolbarLayout =
+                        (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
                 collapsingToolbarLayout.setTitle(cursor.getString(RecipeEntry.POSITION_NAME));
             }
 
