@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:adjustViewBounds="true"
-                android:background="@drawable/placeholder"
+                android:background="@color/colorPrimary"
                 android:scaleType="centerCrop"
                 android:transitionName="transition_image"
                 tools:ignore="ContentDescription" /> <!-- handled in code -->

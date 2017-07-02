@@ -32,16 +32,9 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_gravity="top"
-            android:background="@drawable/transparent_invert"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:background="@drawable/transparent"
+            android:background="@drawable/transparent_invert"
             tools:ignore="ContentDescription" />
 
         <ImageView
@@ -49,7 +42,6 @@
             android:layout_height="32dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/logo" />
-
 
         <TextView
             android:id="@+id/widget_recipe_name"
@@ -76,12 +68,14 @@
 
         <TextView
             android:id="@+id/widget_empty"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="sans-serif-condensed"
+            android:layout_height="wrap_content"
             android:gravity="center"
+            android:padding="24dp"
             android:text="@string/label_no_recipe"
-            android:textAppearance="?android:textAppearanceMediumInverse" />
+            android:textColor="@color/medium_gray"
+            tools:text="No recipe found. Please check your internet connection" />
     </FrameLayout>
 
 </LinearLayout>

@@ -121,13 +121,13 @@ public class DetailActivity extends AppCompatActivity
             if (!cursor.getString(RecipeEntry.POSITION_IMAGE).equals("")) {
                 Picasso.with(this)
                         .load(cursor.getString(RecipeEntry.POSITION_IMAGE))
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
+                        .placeholder(R.drawable.placeholder_wide)
+                        .error(R.drawable.placeholder_wide)
                         .into(recipeImage);
             } else {
                 Picasso.with(this)
-                        .load(R.drawable.placeholder)
-                        .placeholder(R.drawable.placeholder)
+                        .load(R.drawable.placeholder_wide)
+                        .placeholder(R.drawable.placeholder_wide)
                         .into(recipeImage);
             }
             // Create an adapter that knows which fragment should be shown on each page

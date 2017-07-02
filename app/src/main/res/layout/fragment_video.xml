@@ -31,7 +31,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/label_step_image"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder"
+        android:src="@drawable/placeholder_wide"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/horizontalHalf"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -40,6 +40,9 @@ public class FragmentRecipe extends Fragment
     @BindView(R.id.recipe_recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.recipe_empty)
+    View emptyView;
+
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -136,6 +139,9 @@ public class FragmentRecipe extends Fragment
                         data.getString(RecipeEntry.POSITION_IMAGE)
                 );
             }
+            emptyView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
         }
     }
 

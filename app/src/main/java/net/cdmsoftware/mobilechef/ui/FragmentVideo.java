@@ -224,8 +224,8 @@ public class FragmentVideo extends Fragment
                 //replace video with thumbnail image if video doesn't exists
                 Picasso.with(getActivity())
                         .load(thumbnailURL)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
+                        .placeholder(R.drawable.placeholder_wide)
+                        .error(R.drawable.placeholder_wide)
                         .into(videoPlaceholder);
                 videoPlaceholder.setVisibility(View.VISIBLE);
             } else {

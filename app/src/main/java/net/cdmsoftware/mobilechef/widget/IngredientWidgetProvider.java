@@ -67,16 +67,16 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
         // get favorite recipe for widget from shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long recipeId = prefs.getLong(PREF_KEY_RECIPE_ID, 1);
-        String recipeName = prefs.getString(PREF_KEY_RECIPE_NAME, "No Recipe");
+        String recipeName = prefs.getString(PREF_KEY_RECIPE_NAME, "");
         String recipeImage = prefs.getString(PREF_KEY_RECIPE_IMAGE, "");
 
         //bind data to remote views
         remoteViews.setTextViewText(R.id.widget_recipe_name, recipeName);
-        if (recipeImage.equals("")) {
-            remoteViews.setImageViewResource(R.id.widget_recipe_image, R.drawable.placeholder);
-        } else {
+        if (!recipeImage.equals("")) {
             Picasso.with(context)
                     .load(recipeImage)
+                    .placeholder(R.drawable.placeholder_wide)
+                    .error(R.drawable.placeholder_wide)
                     .into(new RecipeImageTarget(remoteViews, R.id.widget_recipe_image));
         }
 

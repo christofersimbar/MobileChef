@@ -2,12 +2,22 @@ package net.cdmsoftware.mobilechef;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import net.cdmsoftware.mobilechef.widget.IngredientWidgetProvider;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+
 public class Utilities {
     public static final String ACTION_DATA_UPDATED = "net.cdmsoftware.mobilechef.ACTION_DATA_UPDATED";
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
 
     public static boolean isFavoriteEmpty(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
