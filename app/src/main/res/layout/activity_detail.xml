@@ -31,7 +31,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/placeholder"
                     android:scaleType="centerCrop"
                     android:transitionName="transition_image"
                     app:layout_collapseMode="parallax"

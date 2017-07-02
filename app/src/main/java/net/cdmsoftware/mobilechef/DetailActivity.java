@@ -180,9 +180,9 @@ public class DetailActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Ingredients";
+                    return getString(R.string.label_ingredients);
                 case 1:
-                    return "Steps";
+                    return getString(R.string.label_steps);
                 default:
                     return super.getPageTitle(position);
             }

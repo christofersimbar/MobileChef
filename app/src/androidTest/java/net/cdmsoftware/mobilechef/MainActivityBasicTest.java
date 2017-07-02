@@ -60,7 +60,7 @@ public class MainActivityBasicTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         //click step tab
-        onView(allOf(withText("Steps"), isDisplayed())).perform(click());
+        onView(allOf(withText(R.string.label_steps), isDisplayed())).perform(click());
 
         //click step item on index 0
         onView(withId(R.id.step_recycler_view))

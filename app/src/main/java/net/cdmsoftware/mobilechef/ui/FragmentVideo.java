@@ -40,6 +40,7 @@ import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import net.cdmsoftware.mobilechef.R;
 
@@ -213,10 +214,22 @@ public class FragmentVideo extends Fragment
             short_description.setText(cursor.getString(StepEntry.POSITION_SHORT_DESCRIPTION));
             description.setText(cursor.getString(StepEntry.POSITION_DESCRIPTION));
             String videoURL = cursor.getString(StepEntry.POSITION_VIDEO_URL);
+            String thumbnailURL = cursor.getString(StepEntry.POSITION_THUMBNAIL_URL);
+
             if (!videoURL.equals("")) {
+                //load video if exists
                 initializePlayer(Uri.parse(videoURL));
                 videoPlaceholder.setVisibility(View.INVISIBLE);
+            } else if (!thumbnailURL.equals("")) {
+                //replace video with thumbnail image if video doesn't exists
+                Picasso.with(getActivity())
+                        .load(thumbnailURL)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
+                        .into(videoPlaceholder);
+                videoPlaceholder.setVisibility(View.VISIBLE);
             } else {
+                //show default image
                 videoPlaceholder.setVisibility(View.VISIBLE);
             }
         }

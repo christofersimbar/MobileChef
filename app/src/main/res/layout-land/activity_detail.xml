@@ -27,33 +27,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/detail_recipe_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/colorPrimary"
             android:elevation="8dp"
+            android:scaleType="centerCrop"
+            android:transitionName="transition_image"
             app:layout_anchor="@id/toolbar_container"
-            app:layout_anchorGravity="bottom|start">
-
-            <ImageView
-                android:id="@+id/detail_recipe_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:background="@drawable/placeholder"
-                android:scaleType="centerCrop"
-                android:transitionName="transition_image"
-                tools:ignore="ContentDescription" /> <!-- handled in code -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/transparent" />
-        </FrameLayout>
+            app:layout_anchorGravity="bottom|start"
+            tools:ignore="ContentDescription" /><!-- handled in code -->
 
         <LinearLayout
             android:layout_width="0dp"

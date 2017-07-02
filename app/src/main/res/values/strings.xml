@@ -2,7 +2,9 @@
     <string name="app_name">Mobile Chef</string>
     <string name="label_servings">servings</string>
     <string name="label_no_recipe">No recipe found. Check your Internet connection</string>
-    <string name="label_instruction_video">Instruction video</string>
+    <string name="label_step_image">Step illustration</string>
     <string name="notification_favorite_added">Recipe added to favorite!</string>
     <string name="notification_instruction_starting">Swipe left or right to navigate between video instruction</string>
+    <string name="label_ingredients">Ingredients</string>
+    <string name="label_steps">Steps</string>
 </resources>
