@@ -20,6 +20,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import net.cdmsoftware.mobilechef.DetailActivity;
 import net.cdmsoftware.mobilechef.R;
@@ -48,12 +49,14 @@ public class FragmentRecipe extends Fragment
 
     //SwipeRefreshLayout: declare broadcast receiver
     private boolean isRefreshing = false;
+
     private BroadcastReceiver refreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (RecipeIntentService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 isRefreshing = intent.getBooleanExtra(RecipeIntentService.EXTRA_REFRESHING, false);
-                updateRefreshingUI();
+                int responseStatus = intent.getIntExtra(RecipeIntentService.EXTRA_RESPONSE_STATUS, Utilities.ApiResponseStatus.NONE);
+                updateRefreshingUI(responseStatus);
             }
         }
     };
@@ -109,8 +112,25 @@ public class FragmentRecipe extends Fragment
         getActivity().unregisterReceiver(refreshingReceiver);
     }
 
-    private void updateRefreshingUI() {
+    private void updateRefreshingUI(int responseStatus) {
         swipeRefreshLayout.setRefreshing(isRefreshing);
+
+        switch (responseStatus) {
+            case Utilities.ApiResponseStatus.SUCCESS:
+                emptyView.setVisibility(View.GONE);
+                break;
+            case Utilities.ApiResponseStatus.ERROR:
+                ((TextView) emptyView).setText(R.string.label_empty_no_data);
+                emptyView.setVisibility(View.VISIBLE);
+                break;
+            default:
+                if (isRefreshing) {
+                    ((TextView) emptyView).setText(R.string.label_empty_refreshing);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    emptyView.setVisibility(View.GONE);
+                }
+        }
     }
 
     @Override
@@ -139,9 +159,6 @@ public class FragmentRecipe extends Fragment
                         data.getString(RecipeEntry.POSITION_IMAGE)
                 );
             }
-            emptyView.setVisibility(View.GONE);
-        } else {
-            emptyView.setVisibility(View.VISIBLE);
         }
     }
 

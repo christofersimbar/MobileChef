@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Mobile Chef</string>
     <string name="label_servings">servings</string>
-    <string name="label_no_recipe">No recipe found. Check your Internet connection</string>
+    <string name="label_empty_no_data">No recipe found. Check your Internet connection or try again in a few minutes</string>
+    <string name="label_empty_refreshing">Collecting recipes. Please wait…</string>
     <string name="label_step_image">Step illustration</string>
     <string name="notification_favorite_added">Recipe added to favorite!</string>
     <string name="notification_instruction_starting">Swipe left or right to navigate between video instruction</string>

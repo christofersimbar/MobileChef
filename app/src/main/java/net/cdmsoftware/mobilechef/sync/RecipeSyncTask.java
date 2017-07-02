@@ -14,11 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -28,7 +26,7 @@ import static net.cdmsoftware.mobilechef.data.Contract.RecipeEntry;
 import static net.cdmsoftware.mobilechef.data.Contract.StepEntry;
 
 class RecipeSyncTask {
-    static void getRecipes(Context context) {
+    static int getRecipes(Context context) {
         HttpURLConnection urlConnection;
         BufferedReader reader;
 
@@ -39,38 +37,36 @@ class RecipeSyncTask {
             //String RECIPE_API_URL = "http://cdn.cdmsoftware.net/baking.json";
             url = new URL(RECIPE_API_URL);
 
-            try {
-                // Create the request to API, and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
+            // Create the request to API, and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
 
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setReadTimeout(10000 /* milliseconds */);
-                urlConnection.setConnectTimeout(15000 /* milliseconds */);
-                urlConnection.connect();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setReadTimeout(10000 /* milliseconds */);
+            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.connect();
 
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuilder buffer = new StringBuilder();
-                if (null == inputStream) {
-                    // Nothing to do.
-                    return;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // add newline to make debugging easier
-                    buffer.append(line).append("\n");
-                }
-
-                if (buffer.length() > 0) {
-                    syncDatabase(context, buffer.toString());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuilder buffer = new StringBuilder();
+            if (null == inputStream) {
+                // Nothing to do.
+                return Utilities.ApiResponseStatus.NONE;
             }
-        } catch (MalformedURLException e) {
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // add newline to make debugging easier
+                buffer.append(line).append("\n");
+            }
+
+            if (buffer.length() > 0) {
+                syncDatabase(context, buffer.toString());
+            }
+            return Utilities.ApiResponseStatus.SUCCESS;
+        } catch (Exception e) {
             e.printStackTrace();
+            return Utilities.ApiResponseStatus.ERROR;
         }
     }
 

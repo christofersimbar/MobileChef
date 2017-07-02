@@ -20,8 +20,9 @@
                 android:drawableTop="@drawable/placeholder"
                 android:gravity="center"
                 android:padding="24dp"
-                android:text="@string/label_no_recipe"
+                android:text="@string/label_empty_no_data"
                 android:textColor="@color/medium_gray"
+                android:visibility="gone"
                 tools:text="No recipe found. Please check your internet connection" />
 
             <android.support.v7.widget.RecyclerView

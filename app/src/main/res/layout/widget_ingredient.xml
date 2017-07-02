@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="24dp"
-            android:text="@string/label_no_recipe"
+            android:text="@string/label_empty_no_data"
             android:textColor="@color/medium_gray"
             tools:text="No recipe found. Please check your internet connection" />
     </FrameLayout>

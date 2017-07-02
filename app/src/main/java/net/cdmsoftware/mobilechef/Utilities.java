@@ -13,6 +13,12 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 public class Utilities {
     public static final String ACTION_DATA_UPDATED = "net.cdmsoftware.mobilechef.ACTION_DATA_UPDATED";
 
+    public class ApiResponseStatus {
+        public static final int NONE = 0;
+        public static final int ERROR = 1;
+        public static final int SUCCESS = 2;
+    }
+
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
