@@ -32,9 +32,9 @@ class RecipeSyncTask {
 
         URL url;
         try {
-            String RECIPE_API_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+            //String RECIPE_API_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
             //personal JSON for testing display
-            //String RECIPE_API_URL = "http://cdn.cdmsoftware.net/baking.json";
+            String RECIPE_API_URL = "https://raw.githubusercontent.com/christofersimbar/MobileChef/master/baking.json";
             url = new URL(RECIPE_API_URL);
 
             // Create the request to API, and open the connection
