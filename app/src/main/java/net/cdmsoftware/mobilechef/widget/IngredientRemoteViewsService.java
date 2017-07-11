@@ -12,8 +12,12 @@ import net.cdmsoftware.mobilechef.R;
 import static net.cdmsoftware.mobilechef.data.Contract.IngredientEntry;
 
 public class IngredientRemoteViewsService extends RemoteViewsService {
+    public static final String ARG_EXTRAS_RECIPE_ID = "recipeId";
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        final long recipeId = intent.getLongExtra(ARG_EXTRAS_RECIPE_ID, 1);
+
         return new RemoteViewsFactory() {
             Cursor cursor;
 
@@ -34,7 +38,7 @@ public class IngredientRemoteViewsService extends RemoteViewsService {
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
                 cursor = getContentResolver().query(
-                        IngredientEntry.buildDirUri(1),
+                        IngredientEntry.buildDirUri(recipeId),
                         IngredientEntry.INGREDIENT_COLUMNS.toArray(new String[]{}),
                         null,
                         null,

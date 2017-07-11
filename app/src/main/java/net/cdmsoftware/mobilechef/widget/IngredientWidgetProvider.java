@@ -25,6 +25,7 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
     public static final String PREF_KEY_RECIPE_ID = "widget_recipe_id";
     public static final String PREF_KEY_RECIPE_NAME = "widget_recipe_name";
     public static final String PREF_KEY_RECIPE_IMAGE = "widget_recipe_image";
+    public static final String ARG_EXTRAS_RECIPE_ID = "recipeId";
 
     private static class RecipeImageTarget implements Target {
         RemoteViews view;
@@ -82,7 +83,7 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
         //for binding data to listview use remote adapter
         remoteViews.setRemoteAdapter(R.id.widget_ingredient_list,
-                new Intent(context, IngredientRemoteViewsService.class));
+                new Intent(context, IngredientRemoteViewsService.class).putExtra(ARG_EXTRAS_RECIPE_ID, recipeId));
 
         // Create an Intent to launch MainActivity when widget header clicked
         Intent intent = new Intent(context, DetailActivity.class);
