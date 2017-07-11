@@ -22,11 +22,6 @@ import net.cdmsoftware.mobilechef.Utilities;
 import static net.cdmsoftware.mobilechef.data.Contract.RecipeEntry;
 
 public class IngredientWidgetProvider extends AppWidgetProvider {
-    public static final String PREF_KEY_RECIPE_ID = "widget_recipe_id";
-    public static final String PREF_KEY_RECIPE_NAME = "widget_recipe_name";
-    public static final String PREF_KEY_RECIPE_IMAGE = "widget_recipe_image";
-    public static final String ARG_EXTRAS_RECIPE_ID = "recipeId";
-
     private static class RecipeImageTarget implements Target {
         RemoteViews view;
         int imageResourceId;
@@ -67,9 +62,9 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
         // get favorite recipe for widget from shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long recipeId = prefs.getLong(PREF_KEY_RECIPE_ID, 1);
-        String recipeName = prefs.getString(PREF_KEY_RECIPE_NAME, "");
-        String recipeImage = prefs.getString(PREF_KEY_RECIPE_IMAGE, "");
+        long recipeId = prefs.getLong(Utilities.PREF_KEY_RECIPE_ID, 0);
+        String recipeName = prefs.getString(Utilities.PREF_KEY_RECIPE_NAME, "");
+        String recipeImage = prefs.getString(Utilities.PREF_KEY_RECIPE_IMAGE, "");
 
         //bind data to remote views
         remoteViews.setTextViewText(R.id.widget_recipe_name, recipeName);
@@ -82,12 +77,10 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
         }
 
         //for binding data to listview use remote adapter
-        remoteViews.setRemoteAdapter(R.id.widget_ingredient_list,
-                new Intent(context, IngredientRemoteViewsService.class).putExtra(ARG_EXTRAS_RECIPE_ID, recipeId));
+        remoteViews.setRemoteAdapter(R.id.widget_ingredient_list, new Intent(context, IngredientRemoteViewsService.class));
 
         // Create an Intent to launch MainActivity when widget header clicked
-        Intent intent = new Intent(context, DetailActivity.class);
-        intent.setData(RecipeEntry.buildItemUri(recipeId));
+        Intent intent = new Intent(context, DetailActivity.class).setData(RecipeEntry.buildItemUri(recipeId));
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget_ingredient_header, pendingIntent);
 
@@ -110,7 +103,6 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
         if (Utilities.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
@@ -118,6 +110,7 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_ingredient_list);
         }
+        super.onReceive(context, intent);
     }
 
     @Override

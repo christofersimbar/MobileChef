@@ -12,6 +12,9 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class Utilities {
     public static final String ACTION_DATA_UPDATED = "net.cdmsoftware.mobilechef.ACTION_DATA_UPDATED";
+    public static final String PREF_KEY_RECIPE_ID = "widget_recipe_id";
+    public static final String PREF_KEY_RECIPE_NAME = "widget_recipe_name";
+    public static final String PREF_KEY_RECIPE_IMAGE = "widget_recipe_image";
 
     public class ApiResponseStatus {
         public static final int NONE = 0;
@@ -27,15 +30,15 @@ public class Utilities {
 
     public static boolean isFavoriteEmpty(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return (prefs.getLong(IngredientWidgetProvider.PREF_KEY_RECIPE_ID, 0) == 0);
+        return (prefs.getLong(PREF_KEY_RECIPE_ID, 0) == 0);
     }
 
     public static void setAsFavoriteRecipe(Context context, long recipeId, String recipeName, String recipeImage) {
         SharedPreferences.Editor prefs = PreferenceManager
                 .getDefaultSharedPreferences(context).edit();
-        prefs.putLong(IngredientWidgetProvider.PREF_KEY_RECIPE_ID, recipeId);
-        prefs.putString(IngredientWidgetProvider.PREF_KEY_RECIPE_NAME, recipeName);
-        prefs.putString(IngredientWidgetProvider.PREF_KEY_RECIPE_IMAGE, recipeImage);
+        prefs.putLong(PREF_KEY_RECIPE_ID, recipeId);
+        prefs.putString(PREF_KEY_RECIPE_NAME, recipeName);
+        prefs.putString(PREF_KEY_RECIPE_IMAGE, recipeImage);
         prefs.apply();
 
     }

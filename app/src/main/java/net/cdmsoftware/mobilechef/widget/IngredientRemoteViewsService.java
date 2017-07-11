@@ -1,33 +1,39 @@
 package net.cdmsoftware.mobilechef.widget;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Binder;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import net.cdmsoftware.mobilechef.R;
+import net.cdmsoftware.mobilechef.Utilities;
 
 import static net.cdmsoftware.mobilechef.data.Contract.IngredientEntry;
 
 public class IngredientRemoteViewsService extends RemoteViewsService {
-    public static final String ARG_EXTRAS_RECIPE_ID = "recipeId";
-
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        final long recipeId = intent.getLongExtra(ARG_EXTRAS_RECIPE_ID, 1);
+        //final long recipeId = intent.getLongExtra(ARG_EXTRAS_RECIPE_ID, 0);
 
         return new RemoteViewsFactory() {
             Cursor cursor;
 
             @Override
             public void onCreate() {
-
             }
 
             @Override
             public void onDataSetChanged() {
+                // get favorite recipe for widget from shared preferences
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                long recipeId = prefs.getLong(Utilities.PREF_KEY_RECIPE_ID, 0);
+                Log.v("MobileChef", String.valueOf(recipeId));
+
                 //close current cursor if exists
                 if (cursor != null) {
                     cursor.close();
@@ -37,6 +43,7 @@ public class IngredientRemoteViewsService extends RemoteViewsService {
                 // data. Therefore we need to clear (and finally restore) the calling identity so
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
+
                 cursor = getContentResolver().query(
                         IngredientEntry.buildDirUri(recipeId),
                         IngredientEntry.INGREDIENT_COLUMNS.toArray(new String[]{}),

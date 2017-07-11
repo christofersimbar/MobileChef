@@ -135,7 +135,7 @@ class RecipeSyncTask {
             try {
                 context.getContentResolver().applyBatch(AUTHORITY, contentProviderOperations);
 
-                //new data available! tell everyone ^_^
+                //new data available! update widget provider
                 Intent dataUpdatedIntent = new Intent(Utilities.ACTION_DATA_UPDATED);
                 context.sendBroadcast(dataUpdatedIntent);
             } catch (RemoteException | OperationApplicationException e) {
